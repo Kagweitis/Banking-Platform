@@ -1,0 +1,62 @@
+spring:
+  application:
+    name: Gateway
+
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+#        - id: openapi
+#          uri: http://localhost:${server.port}
+#          predicates:
+#            - Path=/v3/api-docs/**
+#          filters:
+#            - RewritePath=/v3/api-docs/?(?<segment>.*), /${segment}/v3/api-docs
+
+        - id: customer-service
+          uri: lb://CUSTOMERSERVICE
+          predicates:
+            - Path=/customers/**
+          filters:
+            - RewritePath=/customers/?(?<segment>.*), /customers/${segment}
+
+        - id: account-service
+          uri: lb://ACCOUNTSERVICE
+          predicates:
+            - Path=/account/**
+          filters:
+            - RewritePath=/account/?(?<segment>.*), /account/${segment}
+
+        - id: card-service
+          uri: lb://CARDSERVICE
+          predicates:
+            - Path=/card/**
+          filters:
+            - RewritePath=/card/?(?<segment>.*), /card/${segment}
+
+springdoc:
+  swagger-ui:
+    urls:
+      - name: Customer Service
+        url: http://localhost:8081/v3/api-docs
+      - name: Account Service
+        url: http://localhost:8082/v3/api-docs
+      - name: Card Service
+        url: http://localhost:8083/v3/api-docs
+    enabled: true
+  api-docs:
+    enabled: true
+
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone : http://localhost:8761/eureka/
+  instance:
+    hostname: localhost
+
+

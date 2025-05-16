@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: CustomerService
+  datasource:
+    url: jdbc:postgresql://localhost:5432/customer_db
+    username: customer_service
+    password: Dt3Cu5tomer
+  jpa:
+    generate-ddl: true
+    show-sql: true
+
+server:
+  port: 8081
