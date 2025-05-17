@@ -9,9 +9,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("account/api/v1")
@@ -53,5 +56,24 @@ public class AccountController {
     @PatchMapping("/update/account")
     public GeneralResponse updateCustomerAccount(@Valid @RequestBody UpdateCustomerAccountRequest request) {
         return accountService.updateCustomerAccount(request);
+    }
+
+
+    @Operation(
+
+            summary = "Delete an account",
+            description = "Delete a customer account based on the ID."
+    )
+    @ApiResponses(
+            {
+                    @ApiResponse(responseCode = "200", description = "Account deleted successfully"),
+                    @ApiResponse(responseCode = "400", description = "Missing parameters in request"),
+                    @ApiResponse(responseCode = "500", description = "Internal server error")
+            }
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @PatchMapping("/delete/account/{id}")
+    public GeneralResponse deleteCustomerAccount(@NotNull @PathVariable UUID id) {
+        return accountService.deleteCustomerAccount(id);
     }
 }

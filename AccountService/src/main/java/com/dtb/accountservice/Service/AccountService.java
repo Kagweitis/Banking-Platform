@@ -3,6 +3,7 @@ package com.dtb.accountservice.Service;
 import com.dtb.accountservice.DTOs.Requests.CreateAccountRequest;
 import com.dtb.accountservice.DTOs.Requests.UpdateCustomerAccountRequest;
 import com.dtb.accountservice.DTOs.Responses.GeneralResponse;
+import com.dtb.accountservice.Entity.Account;
 import com.dtb.accountservice.Exceptions.AlreadyExistsException;
 import com.dtb.accountservice.Exceptions.EntityNotFoundException;
 import com.dtb.accountservice.Interfaces.CustomerServiceClient;
@@ -13,6 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -52,6 +56,19 @@ public class AccountService {
         accountMapper.updateCustomerAccount(request);
         return GeneralResponse.builder()
                 .message("Account updated successfully")
+                .status(HttpStatus.OK)
+                .build();
+    }
+
+    public GeneralResponse deleteCustomerAccount(UUID id) {
+
+        Account account = accountRepository.findByAccountIdAndDeletedFalse(id)
+                .orElseThrow(()-> new EntityNotFoundException("Account not found"));
+        account.setDeleted(true);
+        account.setDeletedAt(LocalDateTime.now());
+        accountRepository.save(account);
+        return GeneralResponse.builder()
+                .message("Account deleted successfully")
                 .status(HttpStatus.OK)
                 .build();
     }
