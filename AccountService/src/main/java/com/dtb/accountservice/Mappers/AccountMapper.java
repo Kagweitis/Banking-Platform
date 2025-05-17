@@ -2,6 +2,7 @@ package com.dtb.accountservice.Mappers;
 
 import com.dtb.accountservice.DTOs.Requests.CreateAccountRequest;
 import com.dtb.accountservice.DTOs.Requests.UpdateCustomerAccountRequest;
+import com.dtb.accountservice.DTOs.Responses.GetAccountResponse;
 import com.dtb.accountservice.Entity.Account;
 import com.dtb.accountservice.Exceptions.EntityNotFoundException;
 import com.dtb.accountservice.Repository.AccountRepository;
@@ -28,5 +29,14 @@ public class AccountMapper {
         account.setIban(request.iban() != null ? request.iban() : account.getIban());
         account.setBicSwift(request.bicSwift() != null ? request.bicSwift() : account.getBicSwift());
         accountRepository.save(account);
+    }
+
+    public GetAccountResponse entityToDto(Account account){
+        return GetAccountResponse.builder()
+                .accountId(account.getAccountId())
+                .bicSwift(account.getBicSwift())
+                .iban(account.getIban())
+                .customerId(account.getCustomerId())
+                .build();
     }
 }

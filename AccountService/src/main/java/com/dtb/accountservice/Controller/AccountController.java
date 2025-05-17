@@ -4,6 +4,7 @@ package com.dtb.accountservice.Controller;
 import com.dtb.accountservice.DTOs.Requests.CreateAccountRequest;
 import com.dtb.accountservice.DTOs.Requests.UpdateCustomerAccountRequest;
 import com.dtb.accountservice.DTOs.Responses.GeneralResponse;
+import com.dtb.accountservice.DTOs.Responses.GetAccountResponse;
 import com.dtb.accountservice.Service.AccountService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -75,5 +76,23 @@ public class AccountController {
     @PatchMapping("/delete/account/{id}")
     public GeneralResponse deleteCustomerAccount(@NotNull @PathVariable UUID id) {
         return accountService.deleteCustomerAccount(id);
+    }
+
+    @Operation(
+
+            summary = "Get an account",
+            description = "Get a customer account based on the ID."
+    )
+    @ApiResponses(
+            {
+                    @ApiResponse(responseCode = "200", description = "Account retrieved successfully"),
+                    @ApiResponse(responseCode = "400", description = "Missing parameters in request"),
+                    @ApiResponse(responseCode = "500", description = "Internal server error")
+            }
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/get/account/{id}")
+    public GetAccountResponse getCustomerAccount(@NotNull @PathVariable UUID id) {
+        return accountService.getCustomerAccount(id);
     }
 }

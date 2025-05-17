@@ -3,6 +3,7 @@ package com.dtb.accountservice.Service;
 import com.dtb.accountservice.DTOs.Requests.CreateAccountRequest;
 import com.dtb.accountservice.DTOs.Requests.UpdateCustomerAccountRequest;
 import com.dtb.accountservice.DTOs.Responses.GeneralResponse;
+import com.dtb.accountservice.DTOs.Responses.GetAccountResponse;
 import com.dtb.accountservice.Entity.Account;
 import com.dtb.accountservice.Exceptions.AlreadyExistsException;
 import com.dtb.accountservice.Exceptions.EntityNotFoundException;
@@ -71,5 +72,11 @@ public class AccountService {
                 .message("Account deleted successfully")
                 .status(HttpStatus.OK)
                 .build();
+    }
+
+    public GetAccountResponse getCustomerAccount(UUID id) {
+        Account account = accountRepository.findByAccountIdAndDeletedFalse(id)
+                .orElseThrow(()-> new EntityNotFoundException("Account not found"));
+        return accountMapper.entityToDto(account);
     }
 }

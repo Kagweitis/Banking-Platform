@@ -13,7 +13,12 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "accounts")
+@Table(name = "accounts",
+        indexes = {
+                @Index(name = "idx_iban", columnList = "iban"),
+                @Index(name = "idx_bic_swift", columnList = "bic_swift")
+        }
+        )
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
