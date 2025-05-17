@@ -2,6 +2,7 @@ package com.dtb.customerservice.Controller;
 
 
 import com.dtb.customerservice.DTOs.Requests.CreateCustomerRequest;
+import com.dtb.customerservice.DTOs.Requests.UpdateCustomerRequest;
 import com.dtb.customerservice.DTOs.Responses.GeneralResponse;
 import com.dtb.customerservice.DTOs.Responses.GetCustomerResponse;
 import com.dtb.customerservice.Service.CustomerService;
@@ -84,6 +85,44 @@ public class CustomerController {
             @RequestParam(defaultValue = "10") @NotNull Integer size
             ) {
         return customerService.getUsersByParams(name, startDate, endDate, page, size);
+    }
+
+
+    @Operation(
+
+            summary = "Update a customer's Details",
+            description = "Update a customer's Details based on the data in the request."
+    )
+    @ApiResponses(
+            {
+                    @ApiResponse(responseCode = "200", description = "Updated the customer successfully"),
+                    @ApiResponse(responseCode = "400", description = "Missing parameters in request"),
+                    @ApiResponse(responseCode = "500", description = "Internal server error")
+            }
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @PatchMapping("/update/customer")
+    public GeneralResponse updateCustomer(@Valid @RequestBody UpdateCustomerRequest request) {
+        return customerService.updateCustomer(request);
+    }
+
+
+    @Operation(
+
+            summary = "Delete customer",
+            description = "Soft deletes customer by id"
+    )
+    @ApiResponses(
+            {
+                    @ApiResponse(responseCode = "200", description = "Deleted customer successfuly"),
+                    @ApiResponse(responseCode = "400", description = "Missing parameters in request"),
+                    @ApiResponse(responseCode = "500", description = "Internal server error")
+            }
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @PatchMapping("/delete/customer/{id}")
+    public GeneralResponse deleteCustomer(@NotNull @PathVariable UUID id) {
+        return customerService.deleteCustomer(id);
     }
 
 

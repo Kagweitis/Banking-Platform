@@ -1,6 +1,7 @@
 package com.dtb.customerservice.Service;
 
 import com.dtb.customerservice.DTOs.Requests.CreateCustomerRequest;
+import com.dtb.customerservice.DTOs.Requests.UpdateCustomerRequest;
 import com.dtb.customerservice.DTOs.Responses.GeneralResponse;
 import com.dtb.customerservice.DTOs.Responses.GetCustomerResponse;
 import com.dtb.customerservice.Entities.Customer;
@@ -46,5 +47,26 @@ public class CustomerService {
         Pageable pageable = PageRequest.of(page, size);
         return customerRepository.fuzzySearchByNameAndDateRange(name, startDate, endDate, pageable)
                 .map(customerMapper::getCustomerResponse);
+    }
+
+    public GeneralResponse updateCustomer(UpdateCustomerRequest request) {
+        customerMapper.updateCustomer(request);
+        return GeneralResponse.builder()
+                .message("Customer updated successfully")
+                .status(HttpStatus.OK)
+                .build();
+    }
+
+
+    public GeneralResponse deleteCustomer(UUID id) {
+        Customer customer = customerRepository.findByCustomerIdAndDeletedFalse(id)
+                .orElseThrow(()-> new EntityNotFoundException("Customer not found"));
+        customer.setDeleted(true);
+        customer.setDeletedAt(LocalDateTime.now());
+        customerRepository.save(customer);
+        return GeneralResponse.builder()
+                .message("Customer deleted successfully")
+                .status(HttpStatus.OK)
+                .build();
     }
 }
