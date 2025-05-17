@@ -1,6 +1,7 @@
 package com.dtb.accountservice.Service;
 
 import com.dtb.accountservice.DTOs.Requests.CreateAccountRequest;
+import com.dtb.accountservice.DTOs.Requests.UpdateCustomerAccountRequest;
 import com.dtb.accountservice.DTOs.Responses.GeneralResponse;
 import com.dtb.accountservice.Exceptions.AlreadyExistsException;
 import com.dtb.accountservice.Exceptions.EntityNotFoundException;
@@ -45,5 +46,13 @@ public class AccountService {
         if (accountRepository.existsByIbanAndDeletedFalse(request.iban())){
             throw new AlreadyExistsException("An account with that iban already exists");
         }
+    }
+
+    public GeneralResponse updateCustomerAccount(UpdateCustomerAccountRequest request) {
+        accountMapper.updateCustomerAccount(request);
+        return GeneralResponse.builder()
+                .message("Account updated successfully")
+                .status(HttpStatus.OK)
+                .build();
     }
 }

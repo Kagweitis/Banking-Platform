@@ -2,6 +2,7 @@ package com.dtb.accountservice.Controller;
 
 
 import com.dtb.accountservice.DTOs.Requests.CreateAccountRequest;
+import com.dtb.accountservice.DTOs.Requests.UpdateCustomerAccountRequest;
 import com.dtb.accountservice.DTOs.Responses.GeneralResponse;
 import com.dtb.accountservice.Service.AccountService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,5 +35,23 @@ public class AccountController {
     @PostMapping("/create/account")
     public GeneralResponse createCustomerAccount(@Valid @RequestBody CreateAccountRequest request) {
         return accountService.createCustomerAccount(request);
+    }
+
+    @Operation(
+
+            summary = "Update an account",
+            description = "Update customer account based on the data in the request."
+    )
+    @ApiResponses(
+            {
+                    @ApiResponse(responseCode = "200", description = "Account updated successfully"),
+                    @ApiResponse(responseCode = "400", description = "Missing parameters in request"),
+                    @ApiResponse(responseCode = "500", description = "Internal server error")
+            }
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @PatchMapping("/update/account")
+    public GeneralResponse updateCustomerAccount(@Valid @RequestBody UpdateCustomerAccountRequest request) {
+        return accountService.updateCustomerAccount(request);
     }
 }
