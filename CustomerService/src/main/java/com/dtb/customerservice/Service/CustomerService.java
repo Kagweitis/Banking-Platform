@@ -11,9 +11,13 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -36,5 +40,11 @@ public class CustomerService {
         Customer customer = customerRepository.findByCustomerIdAndDeletedFalse(id)
                 .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
         return customerMapper.getCustomerResponse(customer);
+    }
+
+    public Page<GetCustomerResponse> getUsersByParams(String name, LocalDateTime startDate, LocalDateTime endDate, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return customerRepository.fuzzySearchByNameAndDateRange(name, startDate, endDate, pageable)
+                .map(customerMapper::getCustomerResponse);
     }
 }

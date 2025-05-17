@@ -11,9 +11,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @RestController
@@ -58,6 +61,29 @@ public class CustomerController {
     @ResponseStatus(HttpStatus.OK)
     public GetCustomerResponse getCustomerById(@PathVariable @NotNull UUID id) {
         return customerService.getUserById(id);
+    }
+
+    @Operation(
+            summary = "Get Customers",
+            description = "Get a paginated list of customers based on the params."
+    )
+    @ApiResponses(
+            {
+                    @ApiResponse(responseCode = "200", description = "Customers found successfully."),
+                    @ApiResponse(responseCode = "400", description = "Invalid or missing parameters in the request"),
+                    @ApiResponse(responseCode = "500", description = "Internal server error")
+            }
+    )
+    @GetMapping("/get/customers")
+    @ResponseStatus(HttpStatus.OK)
+    public Page<GetCustomerResponse> getCustomerByParams(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
+            @RequestParam(defaultValue = "0") @NotNull Integer page,
+            @RequestParam(defaultValue = "10") @NotNull Integer size
+            ) {
+        return customerService.getUsersByParams(name, startDate, endDate, page, size);
     }
 
 
