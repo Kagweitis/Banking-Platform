@@ -125,5 +125,23 @@ public class CustomerController {
         return customerService.deleteCustomer(id);
     }
 
+    @Operation(
+            summary = "Check if Customer Exists",
+            description = "Check if Customer Exists Based on their id."
+    )
+    @ApiResponses(
+            {
+                    @ApiResponse(responseCode = "200", description = "Customer found successfully."),
+                    @ApiResponse(responseCode = "400", description = "Invalid or missing parameters in the request"),
+                    @ApiResponse(responseCode = "404", description = "Customer not found"),
+                    @ApiResponse(responseCode = "500", description = "Internal server error")
+            }
+    )
+    @GetMapping("/check/customer/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Boolean checkCustomerById(@PathVariable @NotNull UUID id) {
+        return customerService.checkCustomerExists(id);
+    }
+
 
 }

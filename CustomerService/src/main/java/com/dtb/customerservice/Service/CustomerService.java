@@ -69,4 +69,10 @@ public class CustomerService {
                 .status(HttpStatus.OK)
                 .build();
     }
+
+    public Boolean checkCustomerExists(UUID id) {
+        customerRepository.findByCustomerIdAndDeletedFalse(id)
+                .orElseThrow(()-> new EntityNotFoundException("Customer not found"));
+        return true;
+    }
 }
