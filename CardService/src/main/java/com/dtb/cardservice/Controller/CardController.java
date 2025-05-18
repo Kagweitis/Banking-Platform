@@ -73,7 +73,7 @@ public class CardController {
     )
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping("/delete/card/{id}")
-    public GeneralResponse deleteCard(@NotNull UUID id) {
+    public GeneralResponse deleteCard(@NotNull @PathVariable UUID id) {
         return cardService.deleteCard(id);
     }
 
