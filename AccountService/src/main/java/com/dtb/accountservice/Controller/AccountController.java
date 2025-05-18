@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -94,5 +95,28 @@ public class AccountController {
     @GetMapping("/get/account/{id}")
     public GetAccountResponse getCustomerAccount(@NotNull @PathVariable UUID id) {
         return accountService.getCustomerAccount(id);
+    }
+
+    @Operation(
+
+            summary = "Get accounts by filtering",
+            description = "Get customer accounts based on filtering params."
+    )
+    @ApiResponses(
+            {
+                    @ApiResponse(responseCode = "200", description = "Accounts retrieved successfully"),
+                    @ApiResponse(responseCode = "400", description = "Missing parameters in request"),
+                    @ApiResponse(responseCode = "500", description = "Internal server error")
+            }
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/filter/accounts")
+    public Page<GetAccountResponse> filterAccounts(
+            @RequestParam(required = false) String iban,
+            @RequestParam(required = false) String bicSwift,
+            @RequestParam(defaultValue = "0") @NotNull Integer page,
+            @RequestParam(defaultValue = "10") @NotNull Integer size) {
+
+        return accountService.searchAccounts(iban, bicSwift, page, size);
     }
 }

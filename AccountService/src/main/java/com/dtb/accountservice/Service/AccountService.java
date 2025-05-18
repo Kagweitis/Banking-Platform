@@ -11,6 +11,9 @@ import com.dtb.accountservice.Interfaces.CustomerServiceClient;
 import com.dtb.accountservice.Mappers.AccountMapper;
 import com.dtb.accountservice.Repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -78,5 +81,11 @@ public class AccountService {
         Account account = accountRepository.findByAccountIdAndDeletedFalse(id)
                 .orElseThrow(()-> new EntityNotFoundException("Account not found"));
         return accountMapper.entityToDto(account);
+    }
+
+    public Page<GetAccountResponse> searchAccounts(String iban, String bicSwift, Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return accountRepository.findByIbanAndBicSwift(iban, bicSwift, pageable)
+                .map(accountMapper::entityToDto);
     }
 }
