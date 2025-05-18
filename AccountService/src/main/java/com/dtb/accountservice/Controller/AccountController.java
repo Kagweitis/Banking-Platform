@@ -119,4 +119,23 @@ public class AccountController {
 
         return accountService.searchAccounts(iban, bicSwift, page, size);
     }
+
+    @Operation(
+            summary = "Check if Account Exists",
+            description = "Check if Account Exists Based on  id."
+    )
+    @ApiResponses(
+            {
+                    @ApiResponse(responseCode = "200", description = "Account found successfully."),
+                    @ApiResponse(responseCode = "400", description = "Invalid or missing parameters in the request"),
+                    @ApiResponse(responseCode = "404", description = "Account not found"),
+                    @ApiResponse(responseCode = "500", description = "Internal server error")
+            }
+    )
+    @GetMapping("/check/account/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Boolean checkAccountById(@PathVariable @NotNull UUID id) {
+        return accountService.checkAccountExists(id);
+    }
+
 }

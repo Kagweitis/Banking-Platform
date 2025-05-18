@@ -18,6 +18,8 @@ public interface AccountRepository extends JpaRepository<Account, UUID> {
 
     Boolean existsByIbanAndDeletedFalse(String iban);
 
+    Boolean existsByAccountIdAndDeletedFalse(UUID accountId);
+
     @Query("SELECT a FROM Account a " +
             "WHERE (:iban IS NULL OR a.iban = :iban) " +
             "AND (:bicSwift IS NULL OR a.bicSwift = :bicSwift) " +

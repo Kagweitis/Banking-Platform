@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: CardService
+  datasource:
+    url: jdbc:postgresql://localhost:5432/card_db
+    username: card_service
+    password: Dt3C4rD5
+  jpa:
+    generate-ddl: true
+    show-sql: true
+
+server:
+  port: 8083
+
+eureka:
+  client:
+    service-url:
+      defaultZone : http://localhost:8761/eureka/
+  instance:
+    hostname: localhost
+    prefer-ip-address: false
+security:
+  encryption:
+    key: oAsItt6DHsM1zxkXTNcOZkqZz5cJRlp8dEcw/fjAFh8=
+    iv: Nwu6wiKMv59YPABg7AaQaA==

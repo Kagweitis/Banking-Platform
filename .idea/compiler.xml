@@ -10,13 +10,14 @@
         <module name="DiscoveryService" />
         <module name="Gateway" />
       </profile>
-      <profile name="Annotation profile for AccountService" enabled="true">
+      <profile name="Annotation profile for CardService" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar" />
         </processorPath>
+        <module name="CardService" />
         <module name="AccountService" />
         <module name="CustomerService" />
       </profile>
@@ -25,6 +26,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="AccountService" options="-parameters" />
+      <module name="CardService" options="-parameters" />
       <module name="CustomerService" options="-parameters" />
       <module name="DiscoveryService" options="-parameters" />
       <module name="Gateway" options="-parameters" />

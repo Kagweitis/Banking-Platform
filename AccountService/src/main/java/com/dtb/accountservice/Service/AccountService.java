@@ -88,4 +88,8 @@ public class AccountService {
         return accountRepository.findByIbanAndBicSwift(iban, bicSwift, pageable)
                 .map(accountMapper::entityToDto);
     }
+
+    public Boolean checkAccountExists(UUID id) {
+        return accountRepository.existsByAccountIdAndDeletedFalse(id);
+    }
 }
