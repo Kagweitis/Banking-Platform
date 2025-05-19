@@ -118,3 +118,28 @@ Navigate into each microservice directory and run:
 cd <Service Folder>
 mvn spring-boot:run
 ```
+
+## 🧾 API Interaction Guide
+
+### ✅ Base URL
+
+For all customer-related operations via the gateway:
+
+
+---
+
+### 📌 1. Create a Customer
+
+- **Endpoint:** `POST /customers/api/v1/create/customer`
+- **Description:** Creates a new customer in the system.
+
+#### 🔄 Request Body (JSON)
+
+```json
+{
+  "firstName": "Jane",
+  "lastName": "Doe",
+  "otherName": "jane.doe"
+ }
+```
+

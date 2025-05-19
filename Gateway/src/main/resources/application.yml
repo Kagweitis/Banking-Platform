@@ -9,12 +9,6 @@ spring:
           enabled: true
           lower-case-service-id: true
       routes:
-#        - id: openapi
-#          uri: http://localhost:${server.port}
-#          predicates:
-#            - Path=/v3/api-docs/**
-#          filters:
-#            - RewritePath=/v3/api-docs/?(?<segment>.*), /${segment}/v3/api-docs
 
         - id: customer-service
           uri: lb://CUSTOMERSERVICE
@@ -36,6 +30,13 @@ spring:
             - Path=/card/**
           filters:
             - RewritePath=/card/?(?<segment>.*), /card/${segment}
+
+        - id: openapi
+          uri: lb://${spring.application.name}  # Reference own service via load balancer
+          predicates:
+            - Path=/v3/api-docs/**
+          filters:
+            - RewritePath=/v3/api-docs/(?<segment>.*), /${segment}/v3/api-docs
 
 springdoc:
   swagger-ui:
