@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -114,27 +113,28 @@ public class CardService {
     public GetCardResponse getCardByID(UUID id) {
         Card card = cardRepository.findByCardIdAndDeletedFalse(id)
                 .orElseThrow(()-> new EntityNotFoundException("Card not found"));
-        return cardMapper.entityToDTO(card);
+        return cardMapper.entityToDTO(card, false);
     }
 
     /**
      * Retrieves a paginated list of cards filtered by alias, card type, and partial PAN match.
      *
-     * @param alias     optional card alias filter (e.g., nickname)
-     * @param type      optional card type filter (e.g., "DEBIT", "CREDIT")
-     * @param pan       optional partial PAN match (e.g., last 4 digits)
-     * @param page      0-based page index
-     * @param size      number of records per page
+     * @param alias optional card alias filter (e.g., nickname)
+     * @param type  optional card type filter (e.g., "DEBIT", "CREDIT")
+     * @param pan   optional partial PAN match (e.g., last 4 digits)
+     * @param overideMasking determines whether cvv and pan should be masked
+     * @param page  0-based page index
+     * @param size  number of records per page
      * @return a page of {@link GetCardResponse} matching the criteria
      */
-    public Page<GetCardResponse> getCardsByParams(String alias, String type, String pan, int page, int size) {
+    public Page<GetCardResponse> getCardsByParams(String alias, String type, String pan, Boolean overideMasking, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         CardType cardType = null;
         if (type != null && !type.isEmpty()){
             cardType = CardType.valueOf(type);
         }
         return cardRepository.searchCards(alias, cardType, pan, pageable)
-                .map(cardMapper::entityToDTO);
+                .map(card ->  cardMapper.entityToDTO(card, overideMasking));
     }
 
     public Page<UUID> getAccountIds(String alias, @NotNull Integer page, @NotNull Integer size) {

@@ -40,13 +40,19 @@ public class CardMapper {
         cardRepository.save(card);
     }
 
-    public GetCardResponse entityToDTO(Card card){
+    public GetCardResponse entityToDTO(Card card, Boolean overrideMasking ){
+        String cvv = encryptionService.decrypt(card.getCvv());
+        String pan = encryptionService.decrypt(card.getPan());
+        if (!overrideMasking){
+            cvv = maskUtil.maskCvv(cvv);
+            pan = maskUtil.maskPan(pan);
+        }
         return GetCardResponse.builder()
                 .accountId(card.getAccountId())
                 .cardAlias(card.getCardAlias())
                 .cardType(card.getCardType().name())
-                .cvv(maskUtil.maskCvv(encryptionService.decrypt(card.getCvv())))
-                .pan(maskUtil.maskPan(encryptionService.decrypt(card.getPan())))
+                .cvv(cvv)
+                .pan(pan)
                 .build();
     }
 }
