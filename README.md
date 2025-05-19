@@ -125,12 +125,6 @@ mvn spring-boot:run
 - Once the services are running access swagger docs 
   [here](http://localhost:8080/webjars/swagger-ui/index.html)
 
-## Postman Collection
-
-You can import the Postman collection to test the APIs:
-
-- Download the collection [here](https://api.postman.com/collections/22077924-925be5de-c6f5-4535-bfd6-2f83169ff958?access_key=PMAT-01JVM2N7CXHE0WT94ASG4WHWEP)
-- Open Postman and import the JSON file.
 
 # Bank Platform API Interaction Guide
 
