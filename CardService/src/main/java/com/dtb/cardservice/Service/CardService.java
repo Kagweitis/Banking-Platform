@@ -137,6 +137,18 @@ public class CardService {
                 .map(card ->  cardMapper.entityToDTO(card, overideMasking));
     }
 
+
+    /**
+     * Retrieves a paginated list of account IDs (UUIDs) for cards that match the provided alias.
+     *
+     * <p>This method performs a filtered search on the {@code cardAlias} field, matching entries that
+     * contain the provided alias string (case-insensitive), and returns the corresponding account IDs.</p>
+     *
+     * @param alias the card alias to filter by; may be {@code null} to match all aliases
+     * @param page  the zero-based page index (must not be {@code null})
+     * @param size  the size of the page to be returned (must not be {@code null})
+     * @return a {@link Page} of {@link UUID}s representing the account IDs linked to cards matching the alias
+     */
     public Page<UUID> getAccountIds(String alias, @NotNull Integer page, @NotNull Integer size) {
         Pageable pageable = PageRequest.of(page, size);
         return cardRepository.getAccountIdsByCardAlias(alias, pageable);
