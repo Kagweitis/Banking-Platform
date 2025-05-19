@@ -121,25 +121,14 @@ mvn spring-boot:run
 
 ## 🧾 API Interaction Guide
 
-### ✅ Base URL
+### Swagger Docs
+- Once the services are running access swagger docs 
+  [here](http://localhost:8080/webjars/swagger-ui/index.html)
 
-For all customer-related operations via the gateway:
+## Postman Collection
 
+You can import the Postman collection to test the APIs:
 
----
-
-### 📌 1. Create a Customer
-
-- **Endpoint:** `POST /customers/api/v1/create/customer`
-- **Description:** Creates a new customer in the system.
-
-#### 🔄 Request Body (JSON)
-
-```json
-{
-  "firstName": "Jane",
-  "lastName": "Doe",
-  "otherName": "jane.doe"
- }
-```
+- Download the collection [here](https://api.postman.com/collections/22077924-925be5de-c6f5-4535-bfd6-2f83169ff958?access_key=PMAT-01JVM2N7CXHE0WT94ASG4WHWEP)
+- Open Postman and import the JSON file.
 
