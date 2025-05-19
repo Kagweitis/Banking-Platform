@@ -11,6 +11,7 @@ import com.dtb.cardservice.Exceptions.EntityNotFoundException;
 import com.dtb.cardservice.Interfaces.AccountServiceClient;
 import com.dtb.cardservice.Mappers.CardMapper;
 import com.dtb.cardservice.Repository.CardRepository;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -135,4 +137,8 @@ public class CardService {
                 .map(cardMapper::entityToDTO);
     }
 
+    public Page<UUID> getAccountIds(String alias, @NotNull Integer page, @NotNull Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return cardRepository.getAccountIdsByCardAlias(alias, pageable);
+    }
 }

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,4 +29,17 @@ public interface AccountRepository extends JpaRepository<Account, UUID> {
             @Param("iban") String iban,
             @Param("bicSwift") String bicSwift,
             Pageable pageable);
+
+    @Query("""
+    SELECT a FROM Account a
+    WHERE (:iban IS NULL OR a.iban = :iban)
+      AND (:bicSwift IS NULL OR a.bicSwift = :bicSwift)
+      AND (:accountIds IS NULL OR a.accountId IN :accountIds)
+""")
+    Page<Account> searchAccountsWithFilters(
+            @Param("iban") String iban,
+            @Param("bicSwift") String bicSwift,
+            @Param("accountIds") List<UUID> accountIds,
+            Pageable pageable
+    );
 }

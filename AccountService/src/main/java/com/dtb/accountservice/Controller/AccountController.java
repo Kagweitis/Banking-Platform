@@ -114,10 +114,11 @@ public class AccountController {
     public Page<GetAccountResponse> filterAccounts(
             @RequestParam(required = false) String iban,
             @RequestParam(required = false) String bicSwift,
+            @RequestParam(required = false) String cardAlias,
             @RequestParam(defaultValue = "0") @NotNull Integer page,
             @RequestParam(defaultValue = "10") @NotNull Integer size) {
 
-        return accountService.searchAccounts(iban, bicSwift, page, size);
+        return accountService.searchAccounts(iban, bicSwift, cardAlias, page, size);
     }
 
     @Operation(
@@ -138,4 +139,6 @@ public class AccountController {
         return accountService.checkAccountExists(id);
     }
 
+
 }
+

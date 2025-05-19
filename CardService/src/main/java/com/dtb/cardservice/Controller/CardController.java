@@ -9,12 +9,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -119,5 +121,28 @@ public class CardController {
     ) {
         return cardService.getCardsByParams(cardAlias, cardType, pan, page, size);
     }
+
+    @Operation(
+            summary = "Get account ids",
+            description = "Get account IDs based on card alias"
+    )
+    @ApiResponses(
+            {
+                    @ApiResponse(responseCode = "200", description = "Account ids found successfully."),
+                    @ApiResponse(responseCode = "400", description = "Invalid or missing parameters in the request"),
+                    @ApiResponse(responseCode = "404", description = "Account not found"),
+                    @ApiResponse(responseCode = "500", description = "Internal server error")
+            }
+    )
+    @GetMapping("/get/account/ids")
+    @ResponseStatus(HttpStatus.OK)
+    public Page<UUID> getAccountIds(
+            @RequestParam String alias,
+            @RequestParam(defaultValue = "0") @NotNull Integer page,
+            @RequestParam(defaultValue = "10") @NotNull Integer size
+    ) {
+        return cardService.getAccountIds(alias, page, size);
+    }
+
 
 }

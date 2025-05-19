@@ -32,5 +32,7 @@ public interface CardRepository extends JpaRepository<Card, UUID> {
             @Param("panSuffix") String panSuffix,
             Pageable pageable);
 
+    @Query("SELECT DISTINCT c.accountId FROM Card c WHERE LOWER(c.cardAlias) LIKE LOWER(CONCAT('%', :cardAlias, '%'))")
+    Page<UUID> getAccountIdsByCardAlias(String cardAlias, Pageable pageable);
 
 }

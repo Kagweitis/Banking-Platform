@@ -7,6 +7,7 @@ import com.dtb.accountservice.DTOs.Responses.GetAccountResponse;
 import com.dtb.accountservice.Entity.Account;
 import com.dtb.accountservice.Exceptions.AlreadyExistsException;
 import com.dtb.accountservice.Exceptions.EntityNotFoundException;
+import com.dtb.accountservice.Interfaces.CardServiceClient;
 import com.dtb.accountservice.Interfaces.CustomerServiceClient;
 import com.dtb.accountservice.Mappers.AccountMapper;
 import com.dtb.accountservice.Repository.AccountRepository;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -29,6 +31,7 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final CustomerServiceClient customerServiceClient;
     private final AccountMapper accountMapper;
+    private final CardServiceClient cardServiceClient;
 
 
     @Transactional
@@ -83,13 +86,26 @@ public class AccountService {
         return accountMapper.entityToDto(account);
     }
 
-    public Page<GetAccountResponse> searchAccounts(String iban, String bicSwift, Integer page, Integer size) {
+    public Page<GetAccountResponse> searchAccounts(String iban, String bicSwift, String cardAlias, Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size);
-        return accountRepository.findByIbanAndBicSwift(iban, bicSwift, pageable)
+        List<UUID> accountIds = null;
+        if (cardAlias != null && !cardAlias.isEmpty()){
+           accountIds = getAccountIds(cardAlias, page, size);
+        }
+        return accountRepository.searchAccountsWithFilters(iban, bicSwift, accountIds, pageable)
                 .map(accountMapper::entityToDto);
+
     }
 
     public Boolean checkAccountExists(UUID id) {
         return accountRepository.existsByAccountIdAndDeletedFalse(id);
+    }
+
+    public List<UUID> getAccountIds(String alias, Integer page, Integer size){
+        ResponseEntity<Page<UUID>> response = cardServiceClient.getAccountIds(alias, page, size);
+        if (response.getStatusCode().is2xxSuccessful()){
+            return response.getBody().stream().toList();
+        }
+        return null;
     }
 }
