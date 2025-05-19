@@ -52,6 +52,9 @@ public class Card {
     @Column(name = "pan", nullable = false, updatable = false)
     private String pan;
 
+    @Column(name = "pan_suffix", nullable = false, updatable = false)
+    private String panSuffix;
+
     @Column(name = "cvv", nullable = false, updatable = false)
     private String cvv;
 

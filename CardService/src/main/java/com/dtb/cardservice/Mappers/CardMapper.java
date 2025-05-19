@@ -25,6 +25,7 @@ public class CardMapper {
         return Card.builder()
                 .cvv(encryptionService.encrypt(request.cvv()))
                 .pan(encryptionService.encrypt(request.pan()))
+                .panSuffix(request.pan().substring(request.pan().length() - 4))
                 .accountId(request.accountId())
                 .cardAlias(request.cardAlias())
                 .cardType(CardType.valueOf(request.cardType()))

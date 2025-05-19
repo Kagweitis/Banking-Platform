@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -93,6 +94,30 @@ public class CardController {
     @GetMapping("/get/card/{id}")
     public GetCardResponse getCard(@NotNull @PathVariable UUID id) {
         return cardService.getCardByID(id);
+    }
+
+    @Operation(
+
+            summary = "Search cards",
+            description = "Search cards based on params."
+    )
+    @ApiResponses(
+            {
+                    @ApiResponse(responseCode = "200", description = "Retrieved cards successfully"),
+                    @ApiResponse(responseCode = "400", description = "Missing parameters in request"),
+                    @ApiResponse(responseCode = "500", description = "Internal server error")
+            }
+    )
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/search/cards")
+    public Page<GetCardResponse> searchCards(
+            @RequestParam(required = false) String cardAlias,
+            @RequestParam(required = false) String cardType,
+            @RequestParam(required = false) String pan,
+            @RequestParam(defaultValue = "0") @NotNull Integer page,
+            @RequestParam(defaultValue = "10") @NotNull Integer size
+    ) {
+        return cardService.getCardsByParams(cardAlias, cardType, pan, page, size);
     }
 
 }
