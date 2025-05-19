@@ -132,3 +132,286 @@ You can import the Postman collection to test the APIs:
 - Download the collection [here](https://api.postman.com/collections/22077924-925be5de-c6f5-4535-bfd6-2f83169ff958?access_key=PMAT-01JVM2N7CXHE0WT94ASG4WHWEP)
 - Open Postman and import the JSON file.
 
+# Bank Platform API Interaction Guide
+
+The Bank Platform API allows for the management of customer information, bank accounts, and associated cards. This guide outlines how to interact with the API using the provided endpoints for common operations like creating, updating, retrieving, and deleting records.
+
+**Base URL:** `{{base_url}}`  (You will need to configure this variable in your environment in Postman. Its the Gateway url http://localhost:8080)
+
+## 1. Customer Endpoints
+
+These endpoints manage customer records.
+
+### 1.1 Create Customer
+* **Endpoint:** `POST /customers/api/v1/create/customer`
+* **Description:** Creates a new customer record.
+* **Request Body (JSON):**
+
+    ```json
+    {
+        "firstName": "George",
+        "lastName": "Bezs"
+    }
+    ```
+* **Example Response:** (Successful creation)
+
+    ```json
+    {
+        "message": "Customer created successfully",
+        "status": "CREATED"
+    }
+    ```
+
+### 1.2 Update Customer
+* **Endpoint:** `PATCH /customers/api/v1/update/customer`
+* **Description:** Updates an existing customer record.
+* **Request Body (JSON):**
+
+    ```json
+    {
+        "customerId": "57b8a84a-fc0a-414e-b8c0-6a61b2b0cff0",
+        "firstName": "James",
+        "lastName": "Bezos",
+        "otherName": "AwS"
+    }
+    ```
+* **Example Response:** (Successful update)
+
+    ```json
+    {
+        "message": "Customer updated successfully",
+        "status": "OK"
+    }
+    ```
+
+### 1.3 Get Customer By Id
+* **Endpoint:** `GET /customers/api/v1/get/customer/{customerId}`
+* **Description:** Retrieves a customer record by their ID.
+* **Example Request:** `GET /customers/api/v1/get/customer/57b8a84a-fc0a-414e-b8c0-6a61b2b0cff0`
+* **Example Response:** (Successful retrieval)
+
+    ```json
+    {
+        "customerId": "57b8a84a-fc0a-414e-b8c0-6a61b2b0cff0",
+        "firstName": "James",
+        "lastName": "Bezos",
+        "otherName": "AwS",
+        "createdAt": "2025-05-17T10:00:00Z"
+    }
+    ```
+
+### 1.4 Delete Customer By Id
+* **Endpoint:** `PATCH /customers/api/v1/delete/customer/{customerId}`
+* **Description:** Marks a customer record as deleted (soft delete).
+* **Example Request:** `PATCH /customers/api/v1/delete/customer/57b8a84a-fc0a-414e-b8c0-6a61b2b0cff0`
+* **Example Response:** (Successful deletion)
+
+    ```json
+    {
+        "message": "Customer deleted successfully",
+        "status": "OK"
+    }
+    ```
+
+### 1.5 Get Customers By Keyword and Date Range
+* **Endpoint:** `GET /customers/api/v1/get/customers?name={keyword}&startDate={startDate}&endDate={endDate}`
+* **Description:** Searches for customer records by a keyword in their name and within a specified date range.
+* **Example Request:** `GET /customers/api/v1/get/customers?name=J&startDate=2025-05-17T00:00:00&endDate=2025-05-18T00:00:00`
+* **Example Response:**
+
+    ```json
+    [
+        {
+            "customerId": "some-customer-id-1",
+            "firstName": "John",
+            "lastName": "Doe",
+            "createdAt": "2025-05-17T12:00:00Z"
+        },
+        {
+            "customerId": "some-customer-id-2",
+            "firstName": "Jane",
+            "lastName": "Smith",
+            "createdAt": "2025-05-17T15:30:00Z"
+        }
+    ]
+    ```
+
+## 2. Account Endpoints
+
+These endpoints manage bank accounts associated with customers.
+
+### 2.1 Create New Account
+* **Endpoint:** `POST /account/api/v1/create/account`
+* **Description:** Creates a new bank account for a customer.
+* **Request Body (JSON):**
+
+    ```json
+    {
+      "customerId": "4bbc5153-34fe-40eb-8044-6957f7ba0036",
+      "iban": "DE89370400440532013000",
+      "bicSwift": "DEUTDEFF"
+    }
+    ```
+* **Example Response:** (Successful creation)
+
+    ```json
+    {
+        "message": "Account created successfully",
+        "status": "OK"
+    }
+    ```
+
+### 2.2 Update Account
+* **Endpoint:** `PATCH /account/api/v1/update/account`
+* **Description:** Updates an existing bank account.
+* **Request Body (JSON):**
+
+    ```json
+    {
+      "accountId": "b80bdb61-2ef1-4865-84e3-36bce5ba2c12",
+      "iban": "DE89370400440532013000",
+      "bicSwift": "DEUTTTDEFF"
+    }
+    ```
+* **Example Response:** (Successful update)
+
+    ```json
+    {
+        "message": "Account updated successfully",
+        "status": "OK"
+    }
+    ```
+
+### 2.3 Delete an Account
+* **Endpoint:** `PATCH /account/api/v1/delete/account/{accountId}`
+* **Description:** Marks a bank account as deleted (soft delete).
+* **Example Request:** `PATCH /account/api/v1/delete/account/b80bdb61-2ef1-4865-84e3-36bce5ba2c12`
+* **Example Response:** (Successful deletion)
+
+    ```json
+    {
+        "message": "Account deleted successfully",
+        "status": "OK"
+    }
+    ```
+
+### 2.4 Get Account By ID
+* **Endpoint:** `GET /account/api/v1/get/account/{accountId}`
+* **Description:** Retrieves a bank account record by its ID.
+* **Example Request:** `GET /account/api/v1/get/account/b80bdb61-2ef1-4865-84e3-36bce5ba2c12`
+* **Example Response:**
+
+    ```json
+    {
+        "accountId": "b80bdb61-2ef1-4865-84e3-36bce5ba2c12",
+        "customerId": "4bbc5153-34fe-40eb-8044-6957f7ba0036",
+        "iban": "DE89370400440532013000",
+        "bicSwift": "DEUTTTDEFF",
+        "createdAt": "2025-05-17T11:00:00Z"
+    }
+    ```
+
+### 2.5 Get Accounts Based on Params
+* **Endpoint:** `GET /account/api/v1/filter/accounts?cardAlias={cardAlias}`
+* **Description:** Filters bank accounts based on provided parameters, such as `cardAlias`.
+* **Example Request:** `GET /account/api/v1/filter/accounts?cardAlias=My`
+
+## 3. Cards Endpoints
+
+These endpoints manage cards associated with bank accounts.
+
+### 3.1 Create Card request
+* **Endpoint:** `POST /card/api/v1/create/card`
+* **Description:** Creates a new card.
+* **Request Body (JSON):**
+
+    ```json
+    {
+      "cardAlias": "My Travel Card",
+      "accountId": "fb007624-ba28-43c4-9a83-9e3987f6a80c",
+      "cvv": "123",
+      "pan": "1234567812345678",
+      "cardType": "PHYSICAL"
+    }
+    ```
+* **Example Response:** (Successful creation)
+    ```json
+    {
+        "message": "Card created successfully",
+        "status": "OK"
+    }
+    ```
+
+### 3.2  Update Card Request
+* **Endpoint:** `PATCH /card/api/v1/update/card`
+* **Description:** Updates an existing card.
+* **Request Body (JSON):**
+
+    ```json
+    {
+      "cardAlias": "Me Travel Card",
+      "cardId": "986d17b4-7f1c-4ab4-af41-0bd3d935ceb1"
+    }
+    ```
+* **Example Response:** (Successful update)
+    ```json
+    {
+        "message": "Card updated successfully",
+        "status": "OK"
+    }
+    ```
+
+### 3.3 Delete Card Request
+* **Endpoint:** `PATCH /card/api/v1/update/card`
+* **Description:** Marks a card as deleted.
+* **Request Body (JSON):**
+
+    ```json
+    {
+      "cardAlias": "Me Travel Card",
+      "cardId": "986d17b4-7f1c-4ab4-af41-0bd3d935ceb1"
+    }
+    ```
+* **Example Response:** (Successful deletion)
+    ```json
+    {
+        "message": "Card deleted successfully",
+        "status": "OK"
+    }
+    ```
+
+### 3.4 Get card by id
+* **Endpoint:** `GET /card/api/v1/get/card/{cardId}`
+* **Description:** Retrieves a card by its ID.
+* **Example Request:** `GET /card/api/v1/get/card/68917bd6-f061-4800-8dec-9f8891b0d636`
+* **Example Response:**
+    ```json
+    {
+        "cardId": "68917bd6-f061-4800-8dec-9f8891b0d636",
+        "accountId": "fb007624-ba28-43c4-9a83-9e3987f6a80c",
+        "cardAlias": "My Travel Card",
+        "pan": "1234567812345678",
+        "cvv": "123",
+        "cardType": "PHYSICAL",
+        "createdAt": "2025-05-17T14:00:00Z"
+    }
+    ```
+
+### 3.5 Search cards
+* **Endpoint:** `GET /card/api/v1/search/cards?cardAlias={cardAlias}&overideMasking={overideMasking}`
+* **Description:** Searches for cards based on provided parameters.
+* **Example Request:** `GET /card/api/v1/search/cards?cardAlias=Travel&overideMasking=true`
+* **Example Response:**
+    ```json
+    [
+      {
+        "cardId": "68917bd6-f061-4800-8dec-9f8891b0d636",
+        "accountId": "fb007624-ba28-43c4-9a83-9e3987f6a80c",
+        "cardAlias": "My Travel Card",
+        "pan": "1234567812345678",
+        "cvv": "123",
+        "cardType": "PHYSICAL",
+        "createdAt": "2025-05-17T14:00:00Z"
+      }
+    ]
+    ```
