@@ -27,3 +27,9 @@ security:
     # I would use a Key management service like AWS KMS,
     #Azure Key Vault or the postgres extension for encryption
     iv: 3393367639794567
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+  swagger-ui:
+    enabled: true
