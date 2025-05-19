@@ -116,11 +116,11 @@ public class CardController {
             @RequestParam(required = false) String cardAlias,
             @RequestParam(required = false) String cardType,
             @RequestParam(required = false) String pan,
-            @RequestParam(required = false) Boolean mask,
+            @RequestParam(required = false) Boolean overideMasking,
             @RequestParam(defaultValue = "0") @NotNull Integer page,
             @RequestParam(defaultValue = "10") @NotNull Integer size
     ) {
-        return cardService.getCardsByParams(cardAlias, cardType, pan, mask, page, size);
+        return cardService.getCardsByParams(cardAlias, cardType, pan, overideMasking, page, size);
     }
 
     @Operation(
