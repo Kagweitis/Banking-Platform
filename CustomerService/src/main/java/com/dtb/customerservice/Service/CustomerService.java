@@ -9,7 +9,7 @@ import com.dtb.customerservice.Exceptions.EntityNotFoundException;
 import com.dtb.customerservice.Mappers.CustomerMapper;
 import com.dtb.customerservice.Repository.CustomerRepository;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -35,7 +35,6 @@ public class CustomerService {
      *
      * @param request the validated DTO containing customer details (name, email, etc.)
      * @return a {@link GeneralResponse} with success message and {@code 201 CREATED} status
-     *
      * @throws IllegalArgumentException if validation constraints are violated (handled by Spring)
      */
     @Transactional
@@ -52,10 +51,9 @@ public class CustomerService {
      *
      * @param id the UUID of the customer to retrieve
      * @return the customer's data wrapped in a {@link GetCustomerResponse} DTO
-     *
      * @throws EntityNotFoundException if the customer does not exist or is marked as deleted
      */
-    public GetCustomerResponse getUserById(@NotBlank UUID id) {
+    public GetCustomerResponse getUserById(@NotNull UUID id) {
         Customer customer = customerRepository.findByCustomerIdAndDeletedFalse(id)
                 .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
         return customerMapper.getCustomerResponse(customer);
@@ -84,9 +82,9 @@ public class CustomerService {
      *
      * @param request the DTO containing new customer details
      * @return a {@link GeneralResponse} indicating success and {@code 200 OK} status
-     *
      * @throws EntityNotFoundException if the customer to update does not exist or is deleted
      */
+    @Transactional
     public GeneralResponse updateCustomer(UpdateCustomerRequest request) {
         customerMapper.updateCustomer(request);
         return GeneralResponse.builder()
@@ -101,12 +99,12 @@ public class CustomerService {
      *
      * @param id the UUID of the customer to delete
      * @return a {@link GeneralResponse} with deletion success message
-     *
      * @throws EntityNotFoundException if the customer does not exist or is already deleted
      */
+    @Transactional
     public GeneralResponse deleteCustomer(UUID id) {
         Customer customer = customerRepository.findByCustomerIdAndDeletedFalse(id)
-                .orElseThrow(()-> new EntityNotFoundException("Customer not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
         customer.setDeleted(true);
         customer.setDeletedAt(LocalDateTime.now());
         customerRepository.save(customer);
@@ -122,12 +120,11 @@ public class CustomerService {
      *
      * @param id the UUID of the customer to check
      * @return {@code true} if the customer exists and is active
-     *
      * @throws EntityNotFoundException if the customer does not exist or is deleted
      */
     public Boolean checkCustomerExists(UUID id) {
         customerRepository.findByCustomerIdAndDeletedFalse(id)
-                .orElseThrow(()-> new EntityNotFoundException("Customer not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
         return true;
     }
 }
