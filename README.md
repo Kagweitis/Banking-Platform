@@ -77,7 +77,7 @@ Handles cards tied to accounts.
 
 ## 🔐 Database Configuration Per Microservice
 
-Each microservice connects to the **same PostgreSQL database instance** but uses a separate schema and a dedicated database user for security and isolation.
+Each microservice connects to its own  **PostgreSQL database instance** and uses the public schema and a dedicated database user for security and isolation.
 
 | Microservice      | Database User      | Schema Name |
 |-------------------|--------------------|-------------|
@@ -85,7 +85,7 @@ Each microservice connects to the **same PostgreSQL database instance** but uses
 | `AccountService`  | `account_service`  | `public`    |
 | `CardService`     | `card_service`     | `public`    |
 
-Each service has its own set of tables within its schema and is granted access only to that schema.
+Each service has its own set of tables within its schema and database and is granted access only to that schema.
 
 ### 🧪 Sample SQL Setup
 
